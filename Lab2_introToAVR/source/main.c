@@ -19,12 +19,16 @@ int main(void) {
     unsigned char tmpA = 0x00; //Temporary variable to hold the value of A
 
     while(1) {
-        tmpA = PINA & 0x01;
+        tmpA = PINA & 0x03;
         
-	if(tmpA == 0x01) {
-	    tmpB = (tmpB & 0xFC) | 0x01;
-        } else {
-	    tmpB = (tmpB & 0xFC) | 0x02;
+	if(tmpA == 0x00) {
+	    tmpB = (tmpB & 0xFE) | 0x00;
+        } else if(tmpA == 0x01) {
+	    tmpB = (tmpB & 0xFE) | 0x01;
+	} else if(tmpA == 0x02) {
+	    tmpB = (tmpB & 0xFE) | 0x00;
+	} else {
+	    tmpB = (tmpB & 0xFE) | 0x00;
 	}
 	PORTB = tmpB;
     }
