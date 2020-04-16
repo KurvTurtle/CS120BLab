@@ -1,7 +1,7 @@
 /*	Author: cmele014
- *  Partner(s) Name: Jo Smith
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
+ *  Partner(s) Name: None
+ *	Lab Section: 021
+ *	Assignment: Lab 2  Exercise 1
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
