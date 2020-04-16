@@ -23,7 +23,7 @@ int main(void) {
         
 	if(tmpA == 0x00) {
 	    cntavail = 0x04;
-	} else  if(tmpA == 0x03 | tmpA == 0x05 | tmpA == 0x06 |  tmpA == 0x09 |t                   mpA == 0x0A | tmpA == 0x0C) {
+	} else  if(tmpA == 0x03 | tmpA == 0x05 | tmpA == 0x06 |  tmpA == 0x09 |tmpA == 0x0A | tmpA == 0x0C) {
 	    cntavail = 0x02;
 	} else if(tmpA == 0x07 | tmpA == 0x0B | tmpA == 0x0D | tmpA == 0x0E) {
 	    cntavail = 0x01 ;
