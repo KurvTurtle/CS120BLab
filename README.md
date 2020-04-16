@@ -1,2 +1,0 @@
-# CS120BLab
-CS120B Labs
