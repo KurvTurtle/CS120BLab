@@ -38,7 +38,7 @@ expectPORTB 0x02
 checkResult
 
 # Test sequence from L1: A0, !A0, !A0, A0, A0, !A0 => PORTB: 0x02, State: Wait2
-test "PINA: 0x01, 0x00, 0x00, 0x01, 0x00 => PORTB: 1, State: Wait2"
+test "PINA: 0x01, 0x00, 0x00, 0x01, 0x00 => PORTB: 0x02, State: Wait2"
 set State = L1
 setPINA 0x01
 continue 2
