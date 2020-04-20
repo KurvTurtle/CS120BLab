@@ -12,64 +12,125 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States{L1, L2, Wait1, Wait2} State;
+enum States{Init, Inc, Dec, Reset} State;
 
 void AlternateLED() {
-	unsigned char button = PINA & 0x01;
+	unsigned char button1 = PINA & 0x01;
+	unsigned char button2 = (PINA & 0x02) >> 1;
+	
+	int count = 0;
 	switch(State) { //Transitions
-		case L1: //Initial State
-			if(!button) {
-				State = Wait1; 
-			} else if(button){
-				State = L1;
+		case Init: //Initial State
+			if(button1 && !button2) {
+				switch(PORTC & 0x0F) {//Increment
+                                        case 0x00: PORTC = 0x01; break;
+                                        case 0x01: PORTC = 0x02; break;
+                                        case 0x02: PORTC = 0x03; break;
+                                        case 0x03: PORTC = 0x04; break;
+                                        case 0x04: PORTC = 0x05; break;
+                                        case 0x05: PORTC = 0x06; break;
+                                        case 0x06: PORTC = 0x07; break;
+                                        case 0x07: PORTC = 0x08; break;
+                                        case 0x08: PORTC = 0x09; break;
+                                        case 0x09: PORTC = 0x09; break;
+                                }//Increment
+				State = Inc; 
+			} else if(!button1 && button2){
+				switch(PORTC & 0x0F) {//Decrement
+					case 0x00: PORTC = 0x00; break;
+					case 0x01: PORTC = 0x00; break;
+					case 0x02: PORTC = 0x01; break;
+					case 0x03: PORTC = 0x02; break;
+					case 0x04: PORTC = 0x03; break;
+					case 0x05: PORTC = 0x04; break;
+					case 0x06: PORTC = 0x05; break;
+					case 0x07: PORTC = 0x06; break;
+					case 0x08: PORTC = 0x07; break;
+					case 0x09: PORTC = 0x08; break;
+				}//Decrement
+				State = Dec;
+			} else if(button1 && button2) {
+				State = Reset;
+			} else {
+				State = Init;
 			}
 			break;
-		case L2:
-			if(!button) {
-                                State = Wait2;
-                        } else if(button) {
-				State = L2;
+		case Inc:
+			if(!button1 && button2) {
+				switch(PORTC & 0x0F) {//Decrement
+                                        case 0x00: PORTC = 0x00; break;
+                                        case 0x01: PORTC = 0x00; break;
+                                        case 0x02: PORTC = 0x01; break;
+                                        case 0x03: PORTC = 0x02; break;
+                                        case 0x04: PORTC = 0x03; break;
+                                        case 0x05: PORTC = 0x04; break;
+                                        case 0x06: PORTC = 0x05; break;
+                                        case 0x07: PORTC = 0x06; break;
+                                        case 0x08: PORTC = 0x07; break;
+                                        case 0x09: PORTC = 0x08; break;
+                                }//Decrement
+				State = Dec;
+			} else if(button1 && button2) {
+				State = Reset;
+			} else {
+				State = Inc;
 			}
 			break;
-		case Wait1:
-			if(!button) {
-                                State = Wait1;
-                        } else if(button) {
-                                State = L2;
-                        }
+		case Dec:
+			if(button1 && !button2) {
+				switch(PORTC & 0x0F) {//Increment
+                                        case 0x00: PORTC = 0x01; break;
+                                        case 0x01: PORTC = 0x02; break;
+                                        case 0x02: PORTC = 0x03; break;
+                                        case 0x03: PORTC = 0x04; break;
+                                        case 0x04: PORTC = 0x05; break;
+                                        case 0x05: PORTC = 0x06; break;
+                                        case 0x06: PORTC = 0x07; break;
+                                        case 0x07: PORTC = 0x08; break;
+                                        case 0x08: PORTC = 0x09; break;
+                                        case 0x09: PORTC = 0x09; break;
+                                }//Increment
+                                State = Inc;
+                        } else if(button1 && button2) {
+                                State = Reset;
+                        } else {
+				State = Dec;
+			}
 			break;
-		case Wait2:
-			if(!button) {
-                                State = Wait2;
-                        } else if(!button) {
-                                State = L1;
-                        }
+		case Reset:
+			if(1){State = Init;}
 			break;
 		default:
-			State = L1;
+			State = Init;
 			break;
 	} //Transitions
 
 	switch(State) { //State Actions
-		case L1:
-			PORTB = 0x01;
+		case Init:
+			if(count == 0) {PORTC = 0x07;}
+		        else {PORTC = 0x00;}
 			break;
-		case L2:
-			PORTB = 0x02;
+		case Inc:
+			break;
+		case Dec:
+			break;
+		case Reset:
+			PORTC = 0x00;
+			count = 1;
 			break;
 		default: 
-			PORTB = 0x01;
+			PORTC = 0x07;
 			break;
 	} //State Actions
 }
 
 int main(void) {
-	State = L1; //Initial State
+	State = Init; //Initial State
 	DDRA = 0x00; PORTA = 0xFF; //Configure port A's 8 pins as inputs
-	DDRB = 0xFF; PORTB = 0x00; //Configure port B's 8 pins as outputs
+	DDRC = 0xFF; PORTC = 0x00; //Configure port B's 8 pins as outputs
         
 	while(1) {
-		PORTB = 0x00;
+		PORTC = 0x01;
 		AlternateLED();
 	} //While(1)
 } //Main
