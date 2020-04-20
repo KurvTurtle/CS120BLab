@@ -15,8 +15,8 @@
 enum States{L1, L2, Wait1, Wait2} State;
 
 void AlternateLED() {
+	unsigned char button = PINA & 0x01;
 	switch(State) { //Transitions
-		unsigned char button = PINA & 0x01;
 		case L1: //Initial State
 			if(!button) {
 				State = Wait1; 
@@ -63,12 +63,13 @@ void AlternateLED() {
 	} //State Actions
 }
 
-int main() {
+int main(void) {
 	State = L1; //Initial State
 	DDRA = 0x00; PORTA = 0xFF; //Configure port A's 8 pins as inputs
 	DDRB = 0xFF; PORTB = 0x00; //Configure port B's 8 pins as outputs
         
 	while(1) {
+		PORTB = 0x00;
 		AlternateLED();
 	} //While(1)
 } //Main

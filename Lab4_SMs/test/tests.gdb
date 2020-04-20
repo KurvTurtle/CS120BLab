@@ -25,8 +25,8 @@
 
 echo ======================================================\n
 echo Running all tests..."\n\n
-#Test sequence from L1: A0, !A0, A0 => PORTB: 1, State: L2
-test "PINA: 0x01, 0x00, 0x01 => PORTB: 0x01, State: L2"
+#Test sequence from L1: A0, !A0, A0 => PORTB: 0x02, State: L2
+test "PINA: 0x01, 0x00, 0x01 => PORTB: 0x02, State: L2"
 set State = L1
 setPINA 0x01
 continue 2
@@ -34,11 +34,11 @@ setPINA 0x00
 continue 2 
 setPINA 0x01
 continue 2
-expectPORTB 0x01
+expectPORTB 0x02
 checkResult
 
-# Test sequence from L1: A0, !A0, !A0, A0, A0, !A0 => PORTB: 1, State: Wait2
-test "PINA: 0x01, 0x00, 0x00, 0x01, 0x01 => PORTB: 1, State: Wait2"
+# Test sequence from L1: A0, !A0, !A0, A0, A0, !A0 => PORTB: 0x02, State: Wait2
+test "PINA: 0x01, 0x00, 0x00, 0x01, 0x00 => PORTB: 0x02, State: Wait2"
 set State = L1
 setPINA 0x01
 continue 2
@@ -48,8 +48,8 @@ setPINA 0x00
 continue 2
 setPINA 0x01
 continue 2
-setPINA 0x01
-expectPORTB 0x01
+setPINA 0x00
+expectPORTB 0x02
 checkResult
 
 # Report on how many tests passed/tests ran

@@ -25,7 +25,7 @@
 
 echo ======================================================\n
 echo Running all tests..."\n\n
-#Test sequence from L1: A0, !A0, A0 => PORTB: 2, State: L2
+#Test sequence from L1: A0, !A0, A0 => PORTB: 0x02, State: L2
 test "PINA: 0x01, 0x00, 0x01 => PORTB: 0x02, State: L2"
 set State = L1
 setPINA 0x01
