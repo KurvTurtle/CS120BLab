@@ -26,21 +26,43 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 #Test sequence from Init: A0 && !A1 => PORTC: 0x08, State: Inc
-test "PINA: 0x01, 0x01 => PORTC: 0x08, State: Inc"
+test "PINA: 0x01 => PORTC: 0x08, State: Inc"
 set State = Init
 setPINA 0x01
 continue 2
-setPINA 0x01
-continue 2
+#setPINA 0x01
+#continue 2
 expectPORTC 0x08
+expect State Inc
 checkResult
 
-# Test sequence from Init: !A0 && A1, A0 && A1 => PORTC: 0x00, State: Init
-test "PINA: 0x03 => PORTC: 0x00, State: Init"
+# Test sequence from Init: A0 && A1 => PORTC: 0x00, State: Reset
+test "PINA: 0x03 => PORTC: 0x00, State: Reset"
 set State = Init
 setPINA 0x03
 continue 2
 expectPORTC 0x00
+expect State Reset
+checkResult
+
+#Test sequence from Init: A0 && !A1, !A0 && A1 => PORTC: 0x07, State: Dec
+test "PINA: 0x02 => PORTC: 0x06, State: Dec"
+set State = Init
+#setPINA 0x01
+#continue 2
+setPINA 0x02
+continue 2
+expectPORTC 0x06
+expect State Dec
+checkResult
+
+#Test sequence from Init: !A0 && !A1 => PORTC: 0x07, State: Init
+test "PINA: 0x00 => PORTC: 0x07, State: Init"
+set State = Init
+setPINA 0x00
+continue 2
+expectPORTC 0x07
+expect State Init
 checkResult
 
 # Report on how many tests passed/tests ran
