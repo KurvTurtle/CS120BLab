@@ -16,31 +16,32 @@ enum States{L1, L2, Wait1, Wait2} State;
 
 void AlternateLED() {
 	switch(State) { //Transitions
+		unsigned char button = PINA & 0x01;
 		case L1: //Initial State
-			if(PORTA == 0x00) {
+			if(!button) {
 				State = Wait1; 
-			} else if(PORTA == 0x01){
+			} else if(button){
 				State = L1;
 			}
 			break;
 		case L2:
-			if(PORTA == 0x00) {
+			if(!button) {
                                 State = Wait2;
-                        } else if(PORTA == 0x01) {
+                        } else if(button) {
 				State = L2;
 			}
 			break;
 		case Wait1:
-			if(PORTA == 0x00) {
+			if(!button) {
                                 State = Wait1;
-                        } else if(PORTA == 0x01) {
+                        } else if(button) {
                                 State = L2;
                         }
 			break;
 		case Wait2:
-			if(PORTA == 0x00) {
+			if(!button) {
                                 State = Wait2;
-                        } else if(PORTA == 0x01) {
+                        } else if(!button) {
                                 State = L1;
                         }
 			break;
