@@ -1,7 +1,7 @@
 /*	Author: Christian Melendez
  *  Partner(s) Name: 
  *	Lab Section: 021
- *	Assignment: Lab #5  Exercise #3
+ *	Assignment: Lab #5  Exercise #3 
  *	DEMONSTRATION LINK: https://drive.google.com/open?id=1-eTQSbVAoWp7RSCNpuiR8-wHW5fk0gDN
  *	Exercise Description: [optional - include for your own benefit]
  *
