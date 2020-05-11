@@ -1,9 +1,9 @@
 /*	Author: Christian Melendez
  *  Partner(s) Name: 
  *	Lab Section: 021
- *	Assignment: Lab #6  Exercise #1
+ *	Assignment: Lab #6  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
- *      Demonstration Link: https://drive.google.com/open?id=13tt3dF82A-KVhMjaaOajmDH2665wDO3m
+ *      Demonstration Link: 
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -72,26 +72,49 @@ void TimerSet(unsigned long M) {
 }
 
 	
-enum States{LED0, LED1, LED2} state;
+enum States{Init, LED0, LED1, LED2, Stay, Rest, Reset} state;
 
-void blinkLEDs() {
+void LEDGame() {
+	unsigned char input = ~PINA & 0x01; //Read A0
 	unsigned char output = ~PINB & 0x07; //Write B0-B2
 
 	switch(state) { //Transitions
-		case LED0: //Initial State
-			state = LED1;
+		case Init: //Initial State
+			state = LED0;
+			break;
+		case LED0:
+			if(input==0x01){state=Stay;}
+			else{state = LED1;}
 			break;
 		case LED1:
-                        state = LED2;
+			if(input==0x01){state=Stay;}
+			else{state= LED2;}
                         break;
 		case LED2:
-                        state = LED0;
+			if(input==0x01){state=Stay;}
+			else{state = LED0;}
                         break;
+		case Stay:
+			if(input==0x01){state=Stay;}
+			else if(input==0x00){state=Rest;}
+			break;
+		case Rest:
+			if(input==0x01){state=Reset;}
+			else if(input==0x00){state=Rest;}
+			break;
+		case Reset:
+			if(input==0x01){state=Reset;}
+			else if(input==0x00){state=LED0;}
+			break;
 		default:
 			state = LED0;
+			break;
 	} //Transitions
 
 	switch(state) { //State actions
+		case Init:
+			output = 0x00;
+			break;
 		case LED0:
 			output = 0x01;
 			break;
@@ -101,6 +124,19 @@ void blinkLEDs() {
 		case LED2:
                         output = 0x04;
                         break;
+		case Stay:
+			if(output == 0x01){
+				output = 0x01;
+			} else if(output == 0x02){
+				output = 0x02;
+			} else if(output == 0x04){
+				output = 0x04;
+			}
+			break;
+		case Rest:
+			break;
+		case Reset:
+			break;
 		default:
 			output = 0x01;
 			break;
@@ -112,18 +148,19 @@ void blinkLEDs() {
 
 
 void main() {
-    DDRB = 0xFF; PORTB = 0x00; //Configure port C's 8 pins as outputs
+    DDRA = 0x00; PORTA = 0xFF; //Configure port A's 8 pins as inputs
+    DDRB = 0xFF; PORTB = 0x00; //Configure port B's 8 pins as outputs
 
     PORTB = 0x00; //Initial value of PORTB
     
-    TimerSet(1000);
+    TimerSet(300);
     TimerOn();
     
-    state = LED0; //Set initial state
+    state = Init; //Set initial state
 
     while (1) { 
 	//User Code
-	blinkLEDs(); //Execute 1 SM tick
+	LEDGame(); //Execute 1 SM tick
 	while(!TimerFlag){} //Wait for SM's period
 	TimerFlag = 0; //Lower flag
 	}    
