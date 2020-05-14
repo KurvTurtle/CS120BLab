@@ -2,8 +2,8 @@
  *  Partner(s) Name: 
  *	Lab Section: 021
  *	Assignment: Lab #6  Exercise #2
- *	Exercise Description: [optional - include for your own benefit]
- *      Demonstration Link: 
+ *	Exercise Description: 
+ *      Demonstration Link: https://drive.google.com/open?id=1oqGJwDWZVJpu2GhHn3QeAKRQnorbQiY4 
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
