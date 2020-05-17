@@ -1,7 +1,7 @@
-/*	Author: lab
+/*	Author: Christian Melendez
  *  Partner(s) Name: 
  *	Lab Section:
- *	Assignment: Lab #  Exercise #
+ *	Assignment: Lab 8  Exercise 2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -28,12 +28,24 @@ void main() {
     ADC_init(); //Initializes the ADC
     
     PORTB = 0x00; //Initial value of PORTB
-    PORTD = 0x00; //Initial value of PORTD
+    PORTD = 0x00; //Initial value of PORTD	
+
+    unsigned short MAX = 0x00; //Variable for maximum value of ADC
+    unsigned short MIN = 0xFFFF; //Variable for minimum value of ADC
 
     while (1) { 
 	//User Code
-	unsigned short input = ADC; 
-	PORTB = (char)input & 0xFF;
-	PORTD = (char)input >> 8;
-	}    
+	unsigned short input = ADC; //Value of ADC register
+	PORTB = (char)input & 0xFF; //Lower 8 bits of ADC
+	PORTD = (char)input >> 8; //Upper 2 bits of ADC
+	
+	if(ADC > MAX) { //Write MAX
+		MAX = ADC;
+	}
+	
+	if(ADC < MIN) { //Write MIN
+		MIN = ADC;
+	}
+	
+    }    
 }
