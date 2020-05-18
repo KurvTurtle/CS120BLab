@@ -1,9 +1,9 @@
 /*	Author: Christian Melendez
  *      Partner(s) Name: 
  *	Lab Section: 021
- *	Assignment: Lab #9  Exercise #1
- *	Exercise Description:
- *	Demonstration Link: https://drive.google.com/open?id=1QGShcQ0ahGyEbXST8_el9lnD2-LuWqjD
+ *	Assignment: Lab #9  Exercise #2
+ *	Exercise Description: [optional - include for your own benefit]
+ *	Demonstration Link: https://drive.google.com/open?id=1Eavg1Bf4i637NsA_e7LNARndBgqwfOwf
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -53,54 +53,136 @@ void PWM_off() {
 	TCCR3B = 0x00;
 }
 
-enum States{Init, C, D, E} state;
+enum States{Init, C, D, E, F, G, A2, B2, C2, Off, CPressed, DPressed, EPressed, FPressed, GPressed, A2Pressed, B2Pressed, C2Pressed} state;
 
-void PWM_CDE() {
-	unsigned char button1 = ~PINA & 0x01; //Read A0
-	unsigned char button2 = ~PINA & 0x02; //Read A1
-	unsigned char button3 = ~PINA & 0x04; //Read A2
+void PWM_Cycle() {
+	unsigned char input = ~PINA & 0x07; //Read A0, A1, and A3
+	unsigned char a = ~PINA & 0x01;
+	unsigned char b = ~PINA & 0x02;
+	unsigned char c = ~PINA & 0x04;
 
 	switch(state) { //Transitions
 		case Init: //Initial State
-			if (button1 && !button2 && !button3) {
-				state = C;
-			} else if (!button1 && button2 && !button3) {
-				state = D;
-			} else if (!button1 && !button2 && button3) {
-				state = E;
-			} else {
-				state = Init;
-			}
+			state = CPressed;
 			break;
 		case C:
-			if (button1 && !button2 && !button3) {state = C;}
-			else {state = Init;}
+			if (a && !b && !c) {state = DPressed;}
+			else if (!a && b && !c) {set_PWM(0);}
 			break;
+		case CPressed:
+			if(!a && !c) {state = C;}
+			break;		
 		case D:
-			if (!button1 && button2 && !button3) {state = D;}
-			else {state = Init;}
+			if (a && !b && !c) {state = EPressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = CPressed;}
 			break;
+		case DPressed:
+                        if(!a && !c) {state = D;}
+                        break;
 		case E:
-			if (!button1 && !button2 && button3) {state = E;}
-			else {state = Init;}
+			if (a && !b && !c) {state = FPressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = DPressed;}
 			break;
+		case EPressed:
+                        if(!a && !c) {state = E;}
+                        break;
+		case F:
+			if (a && !b && !c) {state = GPressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = EPressed;}
+			break;
+		case FPressed:
+                        if(!a && !c) {state = F;}
+                        break;
+		case G:
+			if (a && !b && !c) {state = A2Pressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = FPressed;}
+			break;
+		case GPressed:
+                        if(!a && !c) {state = G;}
+                        break;
+		case A2:
+			if (a && !b && !c) {state = B2Pressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = GPressed;}
+			break;
+		case A2Pressed:
+                        if(!a && !c) {state = A2;}
+                        break;
+		case B2:
+			if (a && !b && !c) {state = C2Pressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			else if (!a && !b && c) {state = A2Pressed;}
+			break;
+		case B2Pressed:
+                        if(!a && !c) {state = B2;}
+                        break;
+		case C2:
+			if (!a && !b && c) {state = B2Pressed;}
+                        else if (!a && b && !c) {set_PWM(0);}
+			break;
+		case C2Pressed:
+                        if(!a && !c) {state = C2;}
+                        break;
 		default:
 			break;
 	} //Transitions
 
 	switch(state) { //State actions
 		case Init:
-			set_PWM(0.00);
+			set_PWM(0);
 			break;
-		case C:
+		case CPressed:
 			set_PWM(261.63);
 			break;
-		case D:
+		case DPressed:
 			set_PWM(293.66);
 			break;
-		case E:
+		case EPressed:
 			set_PWM(329.63);
-			break;	
+			break;
+		case FPressed:
+                        set_PWM(349.23);
+                        break;
+                case GPressed:
+                        set_PWM(392.00);
+                        break;
+                case A2Pressed:
+                        set_PWM(440.00);
+                        break;
+		case B2Pressed:
+			set_PWM(493.88);
+			break;
+		case C2Pressed:
+			set_PWM(523.25);
+			break;
+		case C:
+                        set_PWM(261.63);
+                        break;
+                case D:
+                        set_PWM(293.66);
+                        break;
+                case E:
+                        set_PWM(329.63);
+                        break;
+                case F:
+                        set_PWM(349.23);
+                        break;
+                case G:
+                        set_PWM(392.00);
+                        break;
+                case A2:
+                        set_PWM(440.00);
+                        break;
+                case B2:
+                        set_PWM(493.88);
+                        break;
+                case C2:
+                        set_PWM(523.25);
+                        break;
 		default:
 			set_PWM(0);
 			break;
@@ -120,6 +202,6 @@ void main() {
 
     while (1) { 
 	//User Code
-	PWM_CDE(); //Execute 1 SM tick
+	PWM_Cycle(); //Execute 1 SM tick
 	}    
 }
